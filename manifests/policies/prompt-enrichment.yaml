@@ -1,0 +1,19 @@
+# Prompt enrichment on the Ollama LLM route.
+# Prepends a system prompt to every request — client does not need to send it.
+# Client-provided system prompts are additive (gateway prepends, does not replace).
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: ollama-prompt-enrichment
+  namespace: agentgateway-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: ollama
+  backend:
+    ai:
+      prompt:
+        prepend:
+        - role: system
+          content: "You are a data extraction assistant. Always respond with structured CSV format only. No prose, no explanation. Columns: city,continent"

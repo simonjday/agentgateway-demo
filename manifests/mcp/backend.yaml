@@ -1,0 +1,13 @@
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: kubernetes-mcp
+  namespace: agentgateway-system
+spec:
+  mcp:
+    targets:
+    - name: kubernetes-mcp-target
+      static:
+        host: kubernetes-mcp-server.mcp.svc.cluster.local
+        port: 80
+        protocol: StreamableHTTP

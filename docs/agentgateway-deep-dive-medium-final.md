@@ -12,8 +12,7 @@ Where traditional API gateways were built for HTTP services, agentgateway is bui
 
 Architecture-wise it is closer to Envoy/Istio than a conventional gateway. A Go-based controller manages configuration via Kubernetes CRDs and pushes xDS config to Rust-based proxy pods spawned dynamically from `Gateway` resources.
 
-> 📸 **[SCREENSHOT 1 — Grafana_dashboard.png]**
-> *agentgateway Overview dashboard (Grafana ID 24590) — total requests, P95 latency, MCP tool calls, request rate by route (kubernetes-mcp and ollama), status code breakdown including 422 (guardrails blocked) and 429 (rate limited).*
+![agentgateway Overview dashboard (Grafana ID 24590) — total requests, P95 latency, MCP tool calls, request rate by route (kubernetes-mcp and ollama), status code breakdown including 422 (guardrails blocked) and 429 (rate limited).](docs/screenshots/Grafana_dashboard.png)
 
 -----
 
@@ -287,8 +286,7 @@ Add to VS Code `mcp.json`:
 }
 ```
 
-> 📸 **[SCREENSHOT 2 — VS_Code_Copilot_with_pod_list.png]**
-> *VS Code GitHub Copilot Agent mode — `kubernetes-agentgateway` MCP server returning a full pod list across all namespaces. Tool call attributed to `kubernetes-agentgateway (MCP Server)`. 19 pods, all Running.*
+![VS Code GitHub Copilot Agent mode — kubernetes-agentgateway MCP server returning a full pod list across all namespaces proxied via agentgateway. 19 pods, all Running.](docs/screenshots/VS_Code_Copilot_with_pod_list.png)
 
 -----
 
@@ -319,8 +317,7 @@ spec:
 EOF
 ```
 
-> 📸 **[SCREENSHOT 3 — Prometheus_targets.png]**
-> *Prometheus target health — `agentgateway-proxy` showing 1/1 UP, scraping <http://10.244.0.7:15020/metrics>. Labels show namespace, pod, and service attribution.*
+![Prometheus target health — agentgateway-proxy showing 1/1 UP scraping port 15020 metrics endpoint.](docs/screenshots/Prometheus_targets.png)
 
 Import Grafana dashboard ID `24590`. It tracks requests, P95 latency, token usage (input/output), MCP tool calls, and Tokio runtime metrics natively — no additional instrumentation required.
 
@@ -368,8 +365,7 @@ spec:
 EOF
 ```
 
-> 📸 **[SCREENSHOT 4 — Screenshot_2026-05-31_at_17_30_55.png]**
-> *Terminal — guardrails blocking credit card (4111-1111-1111-1111), SSN (123-45-6789), and api_key credentials with HTTP 422. Clean request passes with HTTP 200. No client-side changes required.*
+![Terminal — content guardrails blocking credit card, SSN, and api_key credential patterns with HTTP 422. Clean request returns 200.](docs/screenshots/guardrails-terminal.png)
 
 Built-in detectors: `CreditCard`, `Ssn`, `Email`, `PhoneNumber`, `CaSin`. Actions are `Reject` (block with status code) or `Mask` (replace with token e.g. `<CREDIT_CARD>`).
 
@@ -427,8 +423,7 @@ EOF
 
 Result: unauthenticated requests return 401. Alice sees 3 read-only tools. Bob sees all 19 tools including `pods_exec`, `pods_delete`, `resources_create_or_update`.
 
-> 📸 **[SCREENSHOT 5 — Screenshot_2026-05-31_at_17_33_47.png]**
-> *Terminal — JWT RBAC: Alice (sub=alice) sees 3 tools. Bob (sub=bob) sees 19 tools including write operations. Same gateway, same MCP server, differentiated by JWT claims.*
+![Terminal — JWT RBAC showing Alice with 3 read-only tools vs Bob with 19 tools including pods_exec and resources_delete. Same gateway, differentiated by JWT claims.](docs/screenshots/jwt-rbac-terminal.png)
 
 -----
 
@@ -506,11 +501,9 @@ spec:
 EOF
 ```
 
-> 📸 **[SCREENSHOT 6 — Screenshot_2026-05-31_at_17_36_59.png]**
-> *WITHOUT enrichment: same user message produces freeform prose — the model has no output format instructions.*
+![WITHOUT prompt enrichment — same user message produces freeform prose with no output format enforced.](docs/screenshots/prompt-enrichment-before.png)
 
-> 📸 **[SCREENSHOT 7 — Screenshot_2026-05-31_at_17_37_33.png]**
-> *WITH enrichment: identical request returns structured CSV. The gateway injected the system prompt — the client sent nothing.*
+![WITH prompt enrichment — identical request returns structured CSV. Gateway injected the system prompt transparently.](docs/screenshots/prompt-enrichment-after.png)
 
 -----
 

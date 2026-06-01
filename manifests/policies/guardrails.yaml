@@ -1,0 +1,39 @@
+# Content guardrails on the Ollama LLM route.
+# Request: blocks PII and credential patterns — returns HTTP 422.
+# Response: masks PII with tokens e.g. <CREDIT_CARD>.
+#
+# Built-in detectors: CreditCard, Ssn, Email, PhoneNumber, CaSin
+# Actions: Reject (block) / Mask (replace with token) — title-case required
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: ollama-guardrails
+  namespace: agentgateway-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: ollama
+  backend:
+    ai:
+      promptGuard:
+        request:
+        - regex:
+            action: Reject
+            builtins:
+            - CreditCard
+            - Ssn
+            - Email
+            - PhoneNumber
+            matches:
+            - "(?i)(api[_-]?key|secret|password|token)\\s*[:=]\\s*\\S+"
+          response:
+            message: "Request blocked: sensitive data detected (PII or credentials)"
+            statusCode: 422
+        response:
+        - regex:
+            action: Mask
+            builtins:
+            - CreditCard
+            - Ssn
+            - Email

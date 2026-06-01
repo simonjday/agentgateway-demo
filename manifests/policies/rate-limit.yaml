@@ -1,0 +1,19 @@
+# Local rate limiting on the Ollama LLM route.
+# 'tokens' = request count (not LLM token count) per unit.
+# For true LLM token budgets use global rate limiting with Redis.
+# Supported units: Seconds, Minutes, Hours
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: ollama-rate-limit
+  namespace: agentgateway-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: ollama
+  traffic:
+    rateLimit:
+      local:
+      - tokens: 3
+        unit: Minutes

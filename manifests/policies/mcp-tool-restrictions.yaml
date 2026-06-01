@@ -1,0 +1,25 @@
+# Restricts kubernetes-mcp backend to read-only tools only.
+# Blocked tools are hidden from tools/list entirely — not just rejected at call time.
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: kubernetes-mcp-tool-restrictions
+  namespace: agentgateway-system
+spec:
+  targetRefs:
+  - group: agentgateway.dev
+    kind: AgentgatewayBackend
+    name: kubernetes-mcp
+  backend:
+    mcp:
+      authorization:
+        action: Allow
+        policy:
+          matchExpressions:
+          - 'mcp.tool.name == "pods_list"'
+          - 'mcp.tool.name == "namespaces_list"'
+          - 'mcp.tool.name == "nodes_top"'
+          - 'mcp.tool.name == "nodes_stats_summary"'
+          - 'mcp.tool.name == "resources_list"'
+          - 'mcp.tool.name == "resources_get"'
+          - 'mcp.tool.name == "pods_log"'

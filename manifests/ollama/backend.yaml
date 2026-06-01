@@ -1,0 +1,12 @@
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: ollama
+  namespace: agentgateway-system
+spec:
+  ai:
+    provider:
+      openai:
+        model: llama3.2:3b
+      host: ollama.agentgateway-system.svc.cluster.local
+      port: 11434

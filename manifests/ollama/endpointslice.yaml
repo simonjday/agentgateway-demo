@@ -1,0 +1,16 @@
+# Replace OLLAMA_IP with your Mac's LAN IP (e.g. 192.168.1.21)
+# Run: ipconfig getifaddr en0
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: ollama
+  namespace: agentgateway-system
+  labels:
+    kubernetes.io/service-name: ollama
+addressType: IPv4
+endpoints:
+- addresses:
+  - OLLAMA_IP
+ports:
+- port: 11434
+  protocol: TCP

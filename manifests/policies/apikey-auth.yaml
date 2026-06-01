@@ -1,0 +1,20 @@
+# API key authentication on all routes through the Gateway.
+# Only secrets with label 'access: allowed' are valid keys.
+# Note: matchExpressions is not supported in secretSelector — use matchLabels only.
+# Note: Remove jwt-authn policy before applying this to avoid auth conflicts.
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: apikey-auth
+  namespace: agentgateway-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: agentgateway-proxy
+  traffic:
+    apiKeyAuthentication:
+      mode: Strict
+      secretSelector:
+        matchLabels:
+          access: allowed
