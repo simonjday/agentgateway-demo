@@ -612,6 +612,6 @@ agentgateway sits in a growing market. Here’s how the landscape looks:
 
 The complete setup guide with all YAML, tested commands, troubleshooting notes, and gotchas is available at:
 
-`https://github.com/simonjday/bifrost-k8s-demo/docs/agentgateway-kind-setup.md`
+`https://github.com/simonjday/agentgateway-demo/blob/main/docs/agentgateway-kind-setup.md`
 
 *All testing performed on a personal lab environment. No production systems or client environments were involved.*
