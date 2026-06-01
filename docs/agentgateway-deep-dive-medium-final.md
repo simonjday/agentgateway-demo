@@ -12,7 +12,7 @@ Where traditional API gateways were built for HTTP services, agentgateway is bui
 
 Architecture-wise it is closer to Envoy/Istio than a conventional gateway. A Go-based controller manages configuration via Kubernetes CRDs and pushes xDS config to Rust-based proxy pods spawned dynamically from `Gateway` resources.
 
-![agentgateway Overview dashboard (Grafana ID 24590) — total requests, P95 latency, MCP tool calls, request rate by route (kubernetes-mcp and ollama), status code breakdown including 422 (guardrails blocked) and 429 (rate limited).](docs/screenshots/Grafana_dashboard.png)
+![agentgateway Overview dashboard (Grafana ID 24590) — total requests, P95 latency, MCP tool calls, request rate by route (kubernetes-mcp and ollama), status code breakdown including 422 (guardrails blocked) and 429 (rate limited).](screenshots/Grafana_dashboard.png)
 
 -----
 
@@ -286,7 +286,7 @@ Add to VS Code `mcp.json`:
 }
 ```
 
-![VS Code GitHub Copilot Agent mode — kubernetes-agentgateway MCP server returning a full pod list across all namespaces proxied via agentgateway. 19 pods, all Running.](docs/screenshots/VS_Code_Copilot_with_pod_list.png)
+![VS Code GitHub Copilot Agent mode — kubernetes-agentgateway MCP server returning a full pod list across all namespaces proxied via agentgateway. 19 pods, all Running.](screenshots/VS_Code_Copilot_with_pod_list.png)
 
 -----
 
@@ -317,7 +317,7 @@ spec:
 EOF
 ```
 
-![Prometheus target health — agentgateway-proxy showing 1/1 UP scraping port 15020 metrics endpoint.](docs/screenshots/Prometheus_targets.png)
+![Prometheus target health — agentgateway-proxy showing 1/1 UP scraping port 15020 metrics endpoint.](screenshots/Prometheus_targets.png)
 
 Import Grafana dashboard ID `24590`. It tracks requests, P95 latency, token usage (input/output), MCP tool calls, and Tokio runtime metrics natively — no additional instrumentation required.
 
@@ -365,7 +365,7 @@ spec:
 EOF
 ```
 
-![Terminal — content guardrails blocking credit card, SSN, and api_key credential patterns with HTTP 422. Clean request returns 200.](docs/screenshots/guardrails-terminal.png)
+![Terminal — content guardrails blocking credit card, SSN, and api_key credential patterns with HTTP 422. Clean request returns 200.](screenshots/guardrails-terminal.png)
 
 Built-in detectors: `CreditCard`, `Ssn`, `Email`, `PhoneNumber`, `CaSin`. Actions are `Reject` (block with status code) or `Mask` (replace with token e.g. `<CREDIT_CARD>`).
 
@@ -423,7 +423,7 @@ EOF
 
 Result: unauthenticated requests return 401. Alice sees 3 read-only tools. Bob sees all 19 tools including `pods_exec`, `pods_delete`, `resources_create_or_update`.
 
-![Terminal — JWT RBAC showing Alice with 3 read-only tools vs Bob with 19 tools including pods_exec and resources_delete. Same gateway, differentiated by JWT claims.](docs/screenshots/jwt-rbac-terminal.png)
+![Terminal — JWT RBAC showing Alice with 3 read-only tools vs Bob with 19 tools including pods_exec and resources_delete. Same gateway, differentiated by JWT claims.](screenshots/jwt-rbac-terminal.png)
 
 -----
 
@@ -501,9 +501,9 @@ spec:
 EOF
 ```
 
-![WITHOUT prompt enrichment — same user message produces freeform prose with no output format enforced.](docs/screenshots/prompt-enrichment-before.png)
+![WITHOUT prompt enrichment — same user message produces freeform prose with no output format enforced.](screenshots/prompt-enrichment-before.png)
 
-![WITH prompt enrichment — identical request returns structured CSV. Gateway injected the system prompt transparently.](docs/screenshots/prompt-enrichment-after.png)
+![WITH prompt enrichment — identical request returns structured CSV. Gateway injected the system prompt transparently.](screenshots/prompt-enrichment-after.png)
 
 -----
 
