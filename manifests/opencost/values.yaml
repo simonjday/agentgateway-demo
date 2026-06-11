@@ -1,0 +1,63 @@
+opencost:
+  prometheus:
+    internal:
+      namespaceName: monitoring
+      serviceName: kube-prometheus-stack-prometheus
+      port: 9090
+
+  dataRetention:
+    dailyResolutionDays: 30  # default: 15
+
+  exporter:
+    defaultClusterId: kind-kind
+    replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "55Mi"
+      limits:
+        memory: "1Gi"
+    persistence:
+      enabled: true
+      storageClass: "standard"  # adjust based on your environment
+      accessMode: ReadWriteOnce
+      size: 5Gi
+
+  customPricing:
+    enabled: true
+    provider: aws
+    costModel:
+      description: Modified pricing configuration.
+      CPU: 0.031611
+      spotCPU: 0.006655
+      RAM: 0.004237
+      spotRAM: 0.000892
+      GPU: 0.95
+      storage: 0.00005479452
+      zoneNetworkEgress: 0.01
+      regionNetworkEgress: 0.01
+      internetNetworkEgress: 0.143
+      spotLabel: ""
+      spotLabelValue: ""
+      awsServiceKeyName: ""
+      awsServiceKeySecret: ""
+      awsSpotDataRegion: ""
+      awsSpotDataBucket: ""
+      awsSpotDataPrefix: ""
+      athenaBucketName: ""
+      athenaRegion: ""
+      athenaDatabase: ""
+      athenaTable: ""
+      projectID: "${ACCOUNT_ID}"
+
+  metrics:
+    kubeStateMetrics:
+      emitKsmV1Metrics: false
+      emitKsmV1MetricsOnly: false
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
+
+  ui:
+    enabled: true

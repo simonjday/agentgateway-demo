@@ -1,0 +1,51 @@
+opencost:
+  prometheus:
+    internal:
+      namespaceName: monitoring
+      serviceName: kube-prometheus-stack-prometheus
+      port: 9090
+
+  dataRetention:
+    dailyResolutionDays: 30
+
+  exporter:
+    defaultClusterId: kind-kind
+    replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "100Mi"
+      limits:
+        memory: "1Gi"
+    persistence:
+      enabled: true
+      storageClass: "standard"
+      accessMode: ReadWriteOnce
+      size: 5Gi
+
+  customPricing:
+    enabled: true
+    provider: custom
+    costModel:
+      description: "kind lab pricing"
+      CPU: 0.031611
+      spotCPU: 0.006655
+      RAM: 0.004237
+      spotRAM: 0.000892
+      GPU: 0.95
+      storage: 0.00005479452
+      zoneNetworkEgress: 0.01
+      regionNetworkEgress: 0.01
+      internetNetworkEgress: 0.143
+
+  metrics:
+    kubeStateMetrics:
+      emitKsmV1Metrics: false
+      emitKsmV1MetricsOnly: false
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: kube-prometheus-stack
+
+  ui:
+    enabled: true
